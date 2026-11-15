@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0c110b">
+  <title>Her Name</title>
+  <meta name="description" content="An interactive typography piece about who gets to say a mother's name.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400&family=Noto+Sans+KR:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="is-asking">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- the out-of-focus light behind everything -->
+  <div class="atmos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+  <header class="chrome" aria-label="Site">
+    <span class="chrome__mark">Her Name</span>
+    <span class="chrome__step" id="stepLabel" aria-hidden="true">Q.01 / 02</span>
+    <span class="chrome__time"><time id="clock"></time></span>
+  </header>
+
+  <main class="layout" id="main">
+    <div class="panel">
+      <!-- 1 · private question -->
+      <section class="screen screen--q1" id="s1" aria-labelledby="q1">
+        <form class="ask" id="f1" novalidate>
+          <span class="tag" aria-hidden="true">Q.01 — private</span>
+          <h1 class="q q--xl" id="q1" tabindex="-1"><label for="mom">What do you call your mother?</label></h1>
+          <div class="field">
+            <input class="line-input" id="mom" name="mom" type="text" autocomplete="off" autocapitalize="sentences"
+                   spellcheck="false" maxlength="40" dir="auto" aria-describedby="q1note q1err" enterkeyhint="next">
+            <span class="field__rule" aria-hidden="true"></span>
+          </div>
+          <p class="err" id="q1err" role="alert"></p>
+          <div class="row">
+            <button class="btn" type="submit">Continue <span aria-hidden="true">→</span></button>
+            <p class="note-inline" id="q1note">Any language. This answer stays on your phone.</p>
+          </div>
+        </form>
+        <p class="return" id="returnLink" hidden><a href="#" data-goto="wall">You’ve answered before — see the flower</a></p>
+      </section>
+
+      <!-- 2 · shared question -->
+      <section class="screen screen--q2" id="s2" aria-labelledby="q2" hidden>
+        <form class="ask" id="f2" novalidate>
+          <span class="tag" aria-hidden="true">Q.02 — shared anonymously</span>
+          <h2 class="q q--lg" id="q2" tabindex="-1"><label for="others">What do other people usually call her?</label></h2>
+          <div class="field">
+            <input class="line-input" id="others" name="others" type="text" autocomplete="off" autocapitalize="sentences"
+                   spellcheck="false" maxlength="40" dir="auto" aria-describedby="q2hint" enterkeyhint="done">
+            <span class="field__rule" aria-hidden="true"></span>
+          </div>
+          <p class="hint" id="q2hint">The actual word or phrase — “엄마,” “Mrs. Park,” “Jiwoo’s mom,” her name.</p>
+
+          <fieldset class="choices">
+            <legend class="tag">Which best describes your answer?</legend>
+            <label class="choice"><input type="radio" name="category" value="first"><span>Her first name or personal nickname</span></label>
+            <label class="choice"><input type="radio" name="category" value="married"><span>Her married surname or title</span></label>
+            <label class="choice"><input type="radio" name="category" value="child"><span>A name tied to her child, like “Ella’s mom”</span></label>
+            <label class="choice"><input type="radio" name="category" value="other"><span>Another form of address</span></label>
+            <label class="choice"><input type="radio" name="category" value="unsure"><span>I’m not sure</span></label>
+          </fieldset>
+
+          <p class="notice"><span class="tag">Before you submit</span>
+            Your answer to this question will appear anonymously on the shared screen, alongside everyone else’s.
+            Your first answer is not shared.</p>
+          <p class="err" id="q2err" role="alert"></p>
+          <div class="row">
+            <button class="btn" type="submit" id="submitBtn">Add her to the flower <span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 3 · reading the flower: small texts set around it, like notes on a poster -->
+      <section class="screen screen--results" id="s3" aria-labelledby="resultsTitle" hidden>
+        <h2 class="sr-only" id="resultsTitle" tabindex="-1">Responses</h2>
+        <div class="note note--a">
+          <p class="result" id="result" aria-live="polite"></p>
+          <button class="tbtn" id="toggle" type="button" aria-pressed="false" aria-controls="stage">Her own name</button>
+          <p class="sr-only" id="toggleStatus" aria-live="polite"></p>
+        </div>
+        <div class="note note--b">
+          <p class="reflect">Who gets to call her by her name?</p>
+        </div>
+        <div class="note note--c">
+          <p>Add her name to the wall. Fill in a printed tag that says “My mother’s name is ______” and pin it beside the QR code.</p>
+        </div>
+        <div class="note note--d">
+          <p><span id="count"></span>. Every word in the flower is one student’s answer.</p>
+        </div>
+      </section>
+    </div>
+
+    <figure class="stage" id="stage" aria-label="A carnation made of everyone’s answers">
+      <canvas id="canvas" aria-hidden="true"></canvas>
+      <ul class="sr-only" id="answerList" aria-label="All answers"></ul>
+    </figure>
+  </main>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

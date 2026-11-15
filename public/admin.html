@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Her Name Admin</title>
+  <style>
+    body { margin: 0; padding: 24px 16px; background: #f2ede3; color: #1b1916; font: 15px/1.5 system-ui, sans-serif; }
+    h1 { font: 400 28px Georgia, serif; margin: 0 0 16px; }
+    input, button { font: inherit; padding: 8px 10px; border: 1px solid #1b1916; background: transparent; }
+    button { cursor: pointer; }
+    ul { list-style: none; padding: 0; margin: 20px 0; max-width: 640px; }
+    li { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 8px 0; border-top: 1px solid rgba(0,0,0,.15); }
+    small { color: #5d574d; font-family: ui-monospace, monospace; }
+    #msg { color: #7a1a2b; }
+  </style>
+</head>
+<body>
+  <h1>Remove responses</h1>
+  <p>Entries removed here disappear from every phone on its next refresh (about 20 seconds).</p>
+  <label>Admin token <input id="token" type="password" autocomplete="off"></label>
+  <p id="msg" role="status"></p>
+  <ul id="list"></ul>
+  <script>
+    const list = document.getElementById("list"), msg = document.getElementById("msg"), tok = document.getElementById("token");
+    async function load() {
+      const { responses } = await (await fetch("/api/responses", { cache: "no-store" })).json();
+      list.innerHTML = "";
+      responses.slice().reverse().forEach((r) => {
+        const li = document.createElement("li");
+        const t = document.createElement("span");
+        t.textContent = r.text || "I’m not sure";
+        const meta = document.createElement("small");
+        meta.textContent = " " + r.category;
+        t.append(meta);
+        const b = document.createElement("button");
+        b.textContent = "Remove";
+        b.onclick = async () => {
+          if (!confirm(`Remove “${t.firstChild.textContent}”? This can’t be undone.`)) return;
+          const res = await fetch("/api/responses/" + r.id, { method: "DELETE", headers: { "X-Admin-Token": tok.value } });
+          msg.textContent = res.ok ? "Removed." : "Not removed — check the token (and that ADMIN_TOKEN is set on the server).";
+          if (res.ok) load();
+        };
+        li.append(t, b);
+        list.append(li);
+      });
+    }
+    load();
+  </script>
+</body>
+</html>
